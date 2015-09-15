@@ -136,4 +136,8 @@ def Cramer(var1, var2):
 			score+=((observed-expected)**2)/expected
 	return sqrt(float(score)/(n*df))
 
-def CMHtest()
+def CMHtest():
+	"""
+	In progress
+	"""
+	return None
