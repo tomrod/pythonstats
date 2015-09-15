@@ -120,6 +120,7 @@ def Cramer(var1, var2):
 	##Round 2##
 	Edits: Thomas Roderick, thomas.roderick@gmail.com
 	Date 9/14/2015
+	**adapted from initial code from Jesse Lund
 
 	"""
 	table = crosstab(var1,var2)
