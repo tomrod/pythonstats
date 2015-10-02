@@ -51,7 +51,6 @@ def crosstabulate(in1,in2):
 		where I is the number of unqiue elements of 
 		list var1 and J for var2
 
-	colp : 2D array 
 		A 2D array of size (I,J) for column percentages 
 		where I is the number of unqiue elements of 
 		list var1 and J for var2
@@ -63,7 +62,7 @@ def crosstabulate(in1,in2):
 
 	Status:
 	-------	
-	Untested
+	Basic testing
 
 	Author:
 	-------
@@ -71,26 +70,30 @@ def crosstabulate(in1,in2):
 	9/14/2015
 	"""
 	_, ind1 = unique(in1,return_index=True)
-	unq1 = [in1[i] for i in sorted(ind1)]
+	unq1 = [in1[i] for i in ind1]
 	_, ind2 = unique(in2,return_index=True)
-	unq2 = [in2[i] for i in sorted(ind2)]
+	unq2 = [in2[i] for i in ind2]
+	unq1 = sorted(unq1)
+	unq2 = sorted(unq2)
 	I = len(unq1)
 	J = len(unq2)
-	n = float(len(in1)*len(in2))
-	freq = [[0.0]*J]*I
-	perc = [[0.0]*J]*I
-	rowp = [[0.0]*J]*I
-	colp = [[0.0]*J]*I
-	colsum = [0.0]*J
-	rowsum = [0.0]*I
-	for i in in1: rowsum[unq1.index(i)] += 1
-	for j in in2: colsum[unq2.index(j)] += 1
-	for i in in1:
-		for j in in2:
-			freq[unq1.index(i)][unq2.index(j)] += 1
-			perc[unq1.index(i)][unq2.index(j)] += 1/n
-			colp[unq2.index(j)] += 1/colsum[j]
-			rowp[unq1.index(i)] += 1/rowsum[i]
+	freq = [[0.0 for x in range(J)] for y in range(I)]
+	perc = [[0.0 for x in range(J)] for y in range(I)]
+	rowp = [[0.0 for x in range(J)] for y in range(I)]
+	colp = [[0.0 for x in range(J)] for y in range(I)]
+	n = 0
+	for k in zip(in1,in2):
+		n+= 1
+		k0 = unq1.index(k[0])
+		k1 = unq2.index(k[1])
+		freq[k0][k1]+=1
+	rowsum = [sum(k) for k in freq]
+	colsum = [sum(k) for k in zip(*freq)]
+	for i in range(I):
+		for j in range(J):
+			colp[i][j] = freq[i][j] / rowsum[i]
+			rowp[i][j] = freq[i][j] / colsum[j]
+			perc[i][j] = freq[i][j] / n
 	return freq,perc,colp,rowp
 
 
