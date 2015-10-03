@@ -28,16 +28,22 @@
 
 from pandas import crosstab
 from math import sqrt
-from numpy import unique
+from numpy import unique, array
 
 
-def crosstabulate(in1,in2):
+def crosstabulate(in1,in2,statreturn="freq",indexreturn=False):
 	"""
 	Compute Cramer's V statistic for two Pandas series
 
 	Parameters:
 	----------
-	var1, var2: two lists with any type of level
+	in1, in2: two lists with any type of level
+	statreturn: "freq","perc","colp","rowp"
+		"freq" returns the frequency count
+		"perc" returns the overall percentage in each cell
+		"rowp" returns the relative row percentage for each cell
+		"colp" returns the relative column percentage for each column
+	indexreturn: Returns table information
 
 	Returns:
 	--------
@@ -94,7 +100,31 @@ def crosstabulate(in1,in2):
 			colp[i][j] = freq[i][j] / rowsum[i]
 			rowp[i][j] = freq[i][j] / colsum[j]
 			perc[i][j] = freq[i][j] / n
-	return freq,perc,colp,rowp
+	if statreturn == "perc":
+		if indexreturn == True:
+			return array(perc), unq1, unq2
+		else:
+			return array(perc)
+	elif statreturn == "rowp":
+		if indexreturn == True:
+			return array(rowp), unq1, unq2
+		else:
+			return array(rowp)
+	elif statreturn == "colp":
+		if indexreturn == True:
+			return array(colp), unq1, unq2
+		else:
+			return array(colp)
+	elif statreturn == "freq":
+		if indexreturn == True:
+			return array(freq), unq1, unq2
+		else:
+			return array(freq)					
+	else: 
+		if indexreturn == True:
+			return array(freq),array(perc),array(colp),array(rowp), unq1, unq2
+		else:
+			return array(freq),array(perc),array(colp),array(rowp)
 
 
 def Cramer(var1, var2):
@@ -126,7 +156,7 @@ def Cramer(var1, var2):
 	**adapted from initial code from Jesse Lund
 
 	"""
-	table = crosstab(var1,var2)
+	table = crosstabulate(var1,var2)
 	l,w = table.shape
 	colsum, rowsum = table.sum(0), table.sum(1)
 	df = min(l-1, w-1)
@@ -134,7 +164,7 @@ def Cramer(var1, var2):
 	score = 0
 	for i in range(0,table.shape[0]):
 		for j in range(0,table.shape[1]):
-			observed = table.iloc[i][j]
+			observed = table[i][j]
 			expected = (rowsum[i]/float(n))*colsum[j]
 			score+=((observed-expected)**2)/expected
 	return sqrt(float(score)/(n*df))
