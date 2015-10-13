@@ -29,6 +29,7 @@
 from pandas import crosstab
 from math import sqrt
 from numpy import unique, array
+from itertools import product as iprod
 
 
 def crosstabulate(in1,in2,statreturn="freq",indexreturn=False):
@@ -169,8 +170,16 @@ def Cramer(var1, var2):
 			score+=((observed-expected)**2)/expected
 	return sqrt(float(score)/(n*df))
 
-def CMHtest():
+def CMHtest(var1,var2,controls=None):
+	[] if controls == None else controls=controls
 	"""
 	In progress
 	"""
+	stratum = list(iprod([unique(i) for i in controls]))
+	for i,k in enumerate(stratum):
+		n_k = 0
+		
+
+
+
 	return None
