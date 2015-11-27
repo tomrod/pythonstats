@@ -92,4 +92,3 @@ def ancova(dependent,independent,covariates):
 	print pd.stats.api.ols(y=i_ind[list(dependent.columns)[0]],
 		x=i_ind[list(covariates.columns)+list(dum_ind.columns)])
 
-ancova(dependent=data[['y']],independent=data[['x']], covariates=data[['z']])
